@@ -14,13 +14,23 @@ This is a real-world challenge that allows you to demonstrate your approach to b
 ### Part 1: Enhancing the Classifier
 
 - What are the limitations in the current classifier that's stopping it from scaling?
+    - only works on 3 file types, expects name of type of file in name of file, won't happen ever
+    - need to limit file types and ignore image based files (jpg, pdf image etc)
+    - only work with text files and find some complex file type thing
 - How might you extend the classifier with additional technologies, capabilities, or features?
 
 
 ### Part 2: Productionising the Classifier 
 
 - How can you ensure the classifier is robust and reliable in a production environment?
+    - logging, tests, maintanable and extendable code
+    - ensure no spamming the db we pull file data from (pooled connectinos or somethings)
 - How can you deploy the classifier to make it accessible to other services and users?
+    - docker container
+    - deploy via aws as ecs for low use, large use use kubernetes etc
+    - mainly GIL based / CPU based issue
+    - pull file from DB but then model will block the gil
+    - multiple workers and then multiple pods/ tasks in a service and then scale up scale down.
 
 We encourage you to be creative! Feel free to use any libraries, tools, services, models or frameworks of your choice
 

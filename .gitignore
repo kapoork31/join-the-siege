@@ -4,3 +4,6 @@ venv
 .vscode
 __pycache__
 *.pyc
+heron-test/*
+test.db
+.env
