@@ -1,10 +1,8 @@
-Flask==3.0.3
 pytest==8.3.3
 pytest-mock==3.14.0
-fastapi
-uvicorn
-python-dotenv
-PyPDF2
-docx
-exceptions
+fastapi==0.115.4
+uvicorn==0.32.0
+python-dotenv==1.0.1
+PyPDF2==3.0.1
+python-docx==1.1.2
 scikit-learn==1.5.1

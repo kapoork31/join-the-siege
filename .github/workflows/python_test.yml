@@ -3,14 +3,11 @@ name: Run Tests
 on:
   push:
     branches:
-      - main  # or your default branch
-  pull_request:
-    branches:
-      - main  # or your default branch
+      - main
 
 jobs:
   test:
-    runs-on: ubuntu-latest  # You can also use windows-latest or macos-latest if needed
+    runs-on: ubuntu-latest 
 
     steps:
     - name: Checkout code
@@ -19,12 +16,12 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
-        python-version: '3.8'  # Set your required Python version here
+        python-version: '3.12'
 
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -r requirements.txt  # Assuming your dependencies are listed in requirements.txt
+        pip install -r requirements.txt
 
     - name: Run tests
       run: |
