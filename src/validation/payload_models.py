@@ -1,5 +1,4 @@
 from pydantic import BaseModel
-from fastapi import Query
 
 class ClassifyFileRequest(BaseModel):
     filename: str

@@ -10,13 +10,13 @@ from dotenv import load_dotenv
 
 from src.scripts.populate_customers import populate_customers
 from src.scripts.populate_files import add_file, populate_files  # Ensure you import add_file
-from src.classifier import file_classifier
+from src.classifier import classify_file_ml
 from src.connectors.db_connector import SessionLocal, create_tables
 from src.data_models.tables import File as FileModel
 from src.utils.utils import logging_decorator, download_file, update_file_classification    
 from src.validation.file_type_validation import allowed_file
 from src.validation.payload_models import ClassifyFileRequest, ClassifyFileResponse
-
+from src.utils.extract_text import extract_text_from_file
 # Load in env vars
 load_dotenv()
 
@@ -131,14 +131,19 @@ async def classify_file(
         # Create a BytesIO object to simulate a file-like object
         file_bytes = BytesIO(file_content)
 
-        # Perform the classification (replace with actual logic)
-        file_class = file_classifier(file_metadata.filename)
+        try:
+            text = extract_text_from_file(file_bytes, request.filename)
+        except ValueError as e:
+            print(e)
+
+
+        file_class = classify_file_ml(text)
         
         # Write file classification to db for give  customer and file name
         update_file_classification(db, file_metadata, file_class)
 
         # Construct the response body
-        response_body = {
+        response_body = {   
                 "file_class": file_class,
                 "filename": request.filename,
                 "customer_id": request.customer_id

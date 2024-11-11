@@ -1,3 +1,10 @@
 Flask==3.0.3
 pytest==8.3.3
 pytest-mock==3.14.0
+fastapi
+uvicorn
+python-dotenv
+PyPDF2
+docx
+exceptions
+scikit-learn==1.5.1
