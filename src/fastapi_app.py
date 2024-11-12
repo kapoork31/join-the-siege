@@ -69,7 +69,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
-@app.post("/uploadfile/", status_code=status.HTTP_201_CREATED)
+@app.post("/upload_file/", status_code=status.HTTP_201_CREATED)
 async def upload_file(customer_id: int, file: UploadFile = File(...), db: Session = Depends(get_db), s3_client = Depends(get_s3_client)):
 
     file_path = os.path.join(UPLOAD_DIRECTORY, file.filename)
