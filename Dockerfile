@@ -4,17 +4,17 @@ FROM python:3.12-slim
 # Set the working directory in the container
 WORKDIR /app
 
-# Copy everything from the current directory (root folder) into the container's /app directory
-COPY . /app
+# Copy the requirements.txt first to install dependencies
+COPY requirements.txt /app/
 
 # Install system dependencies (you may need to install additional packages for your app)
 RUN apt-get update && apt-get install -y \
-    gcc \
-    libpq-dev \
-    && rm -rf /var/lib/apt/lists/*
-
+    gcc
 # Install Python dependencies from requirements.txt
-RUN pip install --no-cache-dir -r /app/requirements.txt
+RUN pip install -r /app/requirements.txt
+
+# Now copy the rest of your application code
+COPY . /app
 
 # Expose the port the app will run on
 EXPOSE 8080
