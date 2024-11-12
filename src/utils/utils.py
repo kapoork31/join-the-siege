@@ -7,6 +7,7 @@ from fastapi.responses import JSONResponse
 from botocore.exceptions import ClientError
 from sqlalchemy.orm import Session
 from botocore.client import BaseClient
+from io import BytesIO
 
 from src.errors import FileExtensionNotSupported
 from src.data_models.tables import File as FileModel
@@ -15,13 +16,8 @@ logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
 """
-    logging function
-    wraps all endpoints which allows to have consistent
-    logging for all endopints
+    logging decorator to wrap endpoints in 
 """
-
-
-
 def logging_decorator(func: Callable[..., Any]) -> Callable[..., Any]:
     @functools.wraps(func)
     async def wrapper(*args: Any, **kwargs: Any) -> Any:
@@ -54,17 +50,20 @@ def logging_decorator(func: Callable[..., Any]) -> Callable[..., Any]:
 
     return wrapper
 
-
-def download_file(s3_connection: BaseClient, bucket: str, s3_path: str) -> bytes:
+# download s3 file and then return Bytes object
+def download_file_return_bytes(s3_connection: BaseClient, bucket: str, s3_path: str) -> bytes:
     try:
         s3_object = s3_connection.get_object(Bucket=bucket, Key=s3_path)
-        return s3_object["Body"].read()
+        file_content =  s3_object["Body"].read()
+        file_bytes = BytesIO(file_content)
+        return file_bytes
     except s3_connection.s3.exceptions.NoSuchKey:
         raise FileNotFoundError(f"File '{s3_path}' not found in S3")
     except ClientError as e:
         raise Exception(f"Error accessing S3: {e}")
 
-# add the 
+# add the classification back to the file item in the db
+# prod circumstances this would not be a direct push, but a push to a queue and then a worker of the queue will do this as to not spam the DB
 def update_file_classification(db: Session, file_metadata: FileModel, file_class: str) -> None:
     try:
         # Update the file classification in the database
@@ -80,3 +79,13 @@ def update_file_classification(db: Session, file_metadata: FileModel, file_class
         logging.error(f"Error updating file classification for {file_metadata.filename}: {str(e)}")
         db.rollback()  # Rollback in case of error
         raise Exception(f"Failed to update file classification for {file_metadata.filename}")
+
+# simple function to pull file object from files table based on customer id and filename
+def get_file_metadata(db: Session, customer_id: int, filename: str) -> FileModel:
+    # retrieve file metadata from the db
+    file_metadata = db.query(FileModel).filter(
+        FileModel.customerId == customer_id,
+        FileModel.filename == filename
+    ).first()
+    
+    return file_metadata

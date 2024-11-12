@@ -6,4 +6,3 @@ __pycache__
 *.pyc
 heron-test/*
 test.db
-.env

@@ -44,7 +44,7 @@ def add_file(session: Session, customer_id: int, filename: str, file_path: str, 
     #     raise ValueError(f"Customer with ID {customer_id} not found.")
 
     # Step 3: Create a new file record in the database
-    new_file = File(filename=filename, s3Path=s3_key, customer_id=customer_id)
+    new_file = File(filename=filename, s3Path=s3_key, customerId=customer_id)
 
     # Step 4: Add and commit the file record to the database
     session.add(new_file)

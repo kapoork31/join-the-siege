@@ -28,7 +28,7 @@ class File(Base):
     id = Column(Integer, primary_key=True, index=True)
     filename = Column(String, index=True, nullable=False)  # The name of the file
     s3Path = Column(String, nullable=False)  # The path where the file is stored in S3
-    customer_id = Column(Integer, ForeignKey('customers.id'))  # Foreign key to link to the Customer table
+    customerId = Column(Integer, ForeignKey('customers.id'))  # Foreign key to link to the Customer table
     fileClassification = Column(String, nullable=True)  # This will store the classification result
 
     # Relationship to the Customer model

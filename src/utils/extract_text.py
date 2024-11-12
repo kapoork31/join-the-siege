@@ -7,6 +7,7 @@ import os
 
 # Factory Base class for extracting text from different file types. 
 # Each Subclasses should override the `extract_text` method for respetive file format
+# using the factory base class you have a format to keep adding newer file types to extract text from
 class TextExtractor:
     def extract_text(self, file_bytes: BytesIO) -> str:
         """Extract text from the file bytes. This method should be overridden by subclasses."""
@@ -46,6 +47,7 @@ class TxtTextExtractor(TextExtractor):
         text = file_bytes.read().decode('utf-8', errors='ignore')  # Decode the bytes to a string
         return text
 
+# will need to extend each time new file type comes along etc
 def get_text_extractor(filename: str) -> TextExtractor:
     """Return the appropriate TextExtractor based on file extension."""
 
