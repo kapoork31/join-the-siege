@@ -9,3 +9,4 @@ scikit-learn==1.5.1
 httpx
 pillow==11.0.0
 easyocr==1.7.2
+SQLAlchemy==2.0.36
